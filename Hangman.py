@@ -1,41 +1,14 @@
 import random
 
-HANGMAN_PICS = ['''
-     +---+
-         |
-         |
-         |
-        ===''', '''
-     +---+
-     O   |
-         |
-         |
-        ===''', '''
-       +---+
-    O   |
-    |   |
-        |
-       ===''', '''
-    +---+
-    O   |
-   /|   |
-        |
-       ===''', '''
-    +---+
-    O   |
-   /|\  |
-        |
-       ===''', '''
-    +---+
-    O   |
-   /|\  |
-   /    |
-       ===''', '''
-    +---+
-    O   |
-   /|\  |
-   / \  |
-       ===''']
+HANGMAN_PICS = [                                                ### CHANGE - Used my hangman figures instead and reformatted to make it neat
+    "   +---+\n       |\n       |\n       |\n      ===",
+    "   +---+\n   O   |\n       |\n       |\n      ===",
+    "   +---+\n   O   |\n   |   |\n       |\n      ===",
+    "   +---+\n   O   |\n  /|   |\n       |\n      ===",
+    "   +---+\n   O   |\n  /|\  |\n       |\n      ===",
+    "   +---+\n   O   |\n  /|\  |\n  /    |\n      ===",
+    "   +---+\n   O   |\n  /|\  |    [GAME OVER! x_X] \n  / \  |\n      ==="
+    ]
 words = "ant baboon badger bat bear beaver camel cat clam cobra".split()
  
 def getRandomWord(wordList):
@@ -87,46 +60,49 @@ print('H A N G M A N')
 missedLetters = ''
 correctLetters = ''
 secretWord = getRandomWord(words)
+
 gameIsDone = False
  
-while True:
-      displayBoard(missedLetters, correctLetters, secretWord)
+while gameIsDone is False:
+    displayBoard(missedLetters, correctLetters, secretWord)
  
       # Let the player enter a letter.
-      guess = getGuess(missedLetters + correctLetters)
+    guess = getGuess(missedLetters + correctLetters)
  
-      if guess in secretWord:
-         correctLetters = correctLetters + guess
+    if guess in secretWord:
+        correctLetters = correctLetters + guess
          # Check if the player has won.
-         foundAllLetters = True
+        foundAllLetters = True
 
-         for i in range(len(secretWord)):
-             if secretWord[i] not in correctLetters:
-                 foundAllLetters = False
-                 break
+        for i in range(len(secretWord)):
+            if secretWord[i] not in correctLetters:
+                foundAllLetters = False
         
-         if foundAllLetters:
-             print('Yes! The secret word is "' + secretWord + '"! You have won!')
-             gameIsDone = True
-         else:
-             missedLetters = missedLetters + guess
-
+        if foundAllLetters:
+            print("_____________________\n   Y O U   W O N !\n")            ### CHANGE - Design addition to counteract extra scoreboard print
+            displayBoard(missedLetters, correctLetters, secretWord)         ### CHANGE - extra display & Stat section added - correct missing last word
+            print('Yes! The secret word is "' + secretWord + '"! You have won!')
+            print('________________\nYOUR STATS\nTotal Guesses: ' + str(len(missedLetters) + len(correctLetters)) + 
+            '\nWrong Guesses: ' + str(len(missedLetters)))
+            gameIsDone = True
+    else:                                                                   ### CHANGE - Moved the else condition in line with the first 'If'. Problem: Game wasn't ending; It was nested incorrectly
+        missedLetters = missedLetters + guess
       
-      
-                # Check if player has guessed too many times and lost.
-             if len(missedLetters) == len(HANGMAN_PICS) - 1:
+        # Check if player has guessed too many times and lost.
+        if len(missedLetters) == len(HANGMAN_PICS) - 1:
          
-                 displayBoard(missedLetters, correctLetters, secretWord)
-                 print('You have run out of guesses!\nAfter ' + str(len(missedLetters)) + ' missed guesses and ' +str(len(correctLetters)) + 'correct guesses,the word was "' + secretWord + '"')
-                 gameIsDone = True
+            displayBoard(missedLetters, correctLetters, secretWord)
+            print('You have run out of guesses!\nAfter ' + str(len(missedLetters)) + ' missed guesses and ' +
+            str(len(correctLetters)) + ' correct guesses,the word was "' + secretWord + '"')
+            gameIsDone = True
   
-                # Ask the player if they want to play again (but only if the game is done).
-             if gameIsDone:
-                 if playAgain():
+            # Ask the player if they want to play again (but only if the game is done).
+            if gameIsDone:
+                if playAgain():
 
-                     missedLetters = ''
-                     correctLetters = ''
-                     gameIsDone = False
-                     secretWord = getRandomWord(words)
-                 else:
-                     break
+                    missedLetters = ''
+                    correctLetters = ''
+                    gameIsDone = False
+                    secretWord = getRandomWord(words)
+                else:
+                    break
